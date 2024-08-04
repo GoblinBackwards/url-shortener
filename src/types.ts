@@ -9,5 +9,6 @@ export type DbRowAuth = {
 
 export type DbRowLink = {
     key: string,
-    fullurl: string
+    fullurl: string,
+    last_accessed: number
 }

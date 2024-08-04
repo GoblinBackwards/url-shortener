@@ -8,7 +8,7 @@ const db = new sqlite3.Database('database.sqlite')
 
 db.serialize(() => {
     db.run('CREATE TABLE IF NOT EXISTS auth (authkey TEXT, UNIQUE(authkey))')
-    db.run('CREATE TABLE IF NOT EXISTS link (key TEXT, fullurl TEXT, UNIQUE(key, fullurl))')
+    db.run('CREATE TABLE IF NOT EXISTS link (key TEXT, fullurl TEXT, last_accessed INTEGER, UNIQUE(key, fullurl))')
     db.run('INSERT OR IGNORE INTO auth (authkey) VALUES ($key)', {
         "$key": process.env.DEFAULT_AUTHKEY
     })
@@ -26,14 +26,13 @@ app.post('/', upload.none(), async (req: Request, res: Response) => {
         const authenticated: boolean = rows.map(r => r.authkey).includes(form.authkey);
 
         if (authenticated) {
-            const stmt = db.prepare('INSERT OR IGNORE INTO link (key, fullurl) VALUES ($key, $fullurl)')
+            const stmt = db.prepare('INSERT OR IGNORE INTO link (key, fullurl, last_accessed) VALUES ($key, $fullurl, unixepoch())')
             const base64 = genBase64Str(10);
             let url = form.url
             if (!url.startsWith("http://") && !url.startsWith("https://")) {
                 url = "http://" + url;
             }
             stmt.run({ "$key": base64, "$fullurl": url })
-
             res.status(200).send(base64).end();
         } else {
             res.status(403).end();
@@ -51,15 +50,20 @@ app.get('/:base64link', (req: Request, res: Response) => {
         if (row == null) {
             res.redirect('/');
             return;
+
         }
-        console.log(row)
         res.redirect(row.fullurl);
+        db.run('UPDATE link SET last_accessed = unixepoch() WHERE key = $key', { '$key': base64 });
     })
 })
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`)
 })
+
+setInterval(() => {
+    db.run('DELETE FROM link WHERE last_accessed + 604800 < unixepoch()')
+}, 6000)
 
 function genBase64Str(length: number): string {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890-="
