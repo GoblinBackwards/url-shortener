@@ -1,10 +1,11 @@
 const form = document.getElementById('form');
-const urldisplay = document.getElementById('urldisplay')
+const urldisplay = document.getElementById('urldisplay');
+const copybutton = document.getElementById('copybutton');
+
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const formdata = new FormData(form);
-    console.log(Array.from(formdata));
 
     try {
         const res = await fetch('/', {
@@ -15,6 +16,7 @@ form.addEventListener('submit', async (event) => {
         if (res.ok) {
             const link = await res.text();
             urldisplay.innerHTML = window.location.href + link;
+            copybutton.hidden = false;
         } else {
             urldisplay.innerHTML = 'Failed to create link';
         }
@@ -22,4 +24,10 @@ form.addEventListener('submit', async (event) => {
     catch (err) {
         console.error(err);
     }
+});
+
+copybutton.addEventListener('click', event => {
+    console.log('meow')
+    console.log(urldisplay.innerHTML)
+    navigator.clipboard.writeText(urldisplay.innerHTML);
 });

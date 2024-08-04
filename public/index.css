@@ -33,3 +33,11 @@ input[type=submit] {
 input[type=submit]:hover {
     background-color: rgb(0, 189, 189);
 }
+
+#copybutton {
+    width: 6em;
+}
+
+#copybutton img {
+    width: 3em;
+}
