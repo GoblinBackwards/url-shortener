@@ -43,7 +43,15 @@ app.post('/', upload.none(), async (req: Request, res: Response) => {
 
 app.get('/:base64link', (req: Request, res: Response) => {
     const base64 = req.params.base64link;
+    if (base64 == null) {
+        res.redirect('/');
+        return;
+    }
     db.get('SELECT * FROM link WHERE key = ?', base64, (err, row: DbRowLink) => {
+        if (row == null) {
+            res.redirect('/');
+            return;
+        }
         console.log(row)
         res.redirect(row.fullurl);
     })
@@ -59,7 +67,6 @@ function genBase64Str(length: number): string {
     const charArr = []
     for (const i of intArr) {
         const n = Math.floor(i / 4)
-        console.log(n)
         charArr.push(chars[n]);
     }
     return charArr.join("");
