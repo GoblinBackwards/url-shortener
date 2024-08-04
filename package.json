@@ -1,0 +1,14 @@
+{
+  "name": "url-shortener",
+  "version": "1.0.0",
+  "description": "Custom URL Shortener",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
