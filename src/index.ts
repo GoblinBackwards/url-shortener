@@ -8,7 +8,7 @@ const db = new sqlite3.Database('database.sqlite')
 
 db.serialize(() => {
     db.run('CREATE TABLE IF NOT EXISTS auth (authkey TEXT, UNIQUE(authkey))')
-    db.run('CREATE TABLE IF NOT EXISTS link (key TEXT, fullurl TEXT, last_accessed INTEGER, UNIQUE(key, fullurl))')
+    db.run('CREATE TABLE IF NOT EXISTS link (key TEXT, fullurl TEXT, last_accessed INTEGER, UNIQUE(key))')
     db.run('INSERT OR IGNORE INTO auth (authkey) VALUES ($key)', {
         "$key": process.env.DEFAULT_AUTHKEY
     })

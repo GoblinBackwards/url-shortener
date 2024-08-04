@@ -1,4 +1,5 @@
 const form = document.getElementById('form');
+const urldisplay = document.getElementById('urldisplay')
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -12,14 +13,13 @@ form.addEventListener('submit', async (event) => {
         });
 
         if (res.ok) {
-            const link = await res.text()
-            alert(`Link created: ${link}`)
+            const link = await res.text();
+            urldisplay.innerHTML = window.location.href + link;
         } else {
-            alert('Failed to create link')
+            urldisplay.innerHTML = 'Failed to create link';
         }
     }
     catch (err) {
         console.error(err);
     }
-
 });
