@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from 'express'
+import { DbRowAuth, DbRowLink, FormBody } from './types'
 import multer from 'multer'
 import crypto from 'crypto'
 require('dotenv').config()
@@ -16,20 +17,6 @@ db.serialize(() => {
 const app = express()
 const port = 3000
 const upload = multer()
-
-type FormBody = {
-    url: string,
-    authkey: string
-}
-
-type DbRowAuth = {
-    authkey: string
-}
-
-type DbRowLink = {
-    key: string,
-    fullurl: string
-}
 
 app.use(express.static('public'))
 
