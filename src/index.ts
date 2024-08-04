@@ -15,7 +15,11 @@ app.use(express.static('public'))
 app.post('/', upload.none(), (req: Request, res: Response) => {
     const validkeys = ['meow', 'moo']
     const body: FormBody = req.body;
-    console.log(body)
+    if (validkeys.includes(body.authkey)) {
+        res.status(200).send('new link').end();
+    } else {
+        res.status(403).end();
+    }
 })
 
 app.get('/link/', (req: Request, res: Response) => {
