@@ -61,9 +61,9 @@ app.listen(port, () => {
     console.log(`Listening on port ${port}`)
 })
 
-const deleteInterval = 30 * 60 * 1000; // 30 minutes
+const deleteInterval = 30 * 60 * 1000; // run every 30 minutes
 setInterval(() => {
-    db.run('DELETE FROM link WHERE last_accessed + 604800 < unixepoch()')
+    db.run('DELETE FROM link WHERE last_accessed + 604800 < unixepoch()'); // delete older than 1 week
 }, deleteInterval)
 
 function genBase64Str(length: number): string {
